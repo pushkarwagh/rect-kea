@@ -14,8 +14,6 @@ export function App() {
       <Header />
       <EuiProvider colorMode="light">
       <div className="App-layout">
-        {/* <DemoForm /> */}
-        {/* <Counter/> */}
         <Books/>
       </div>
         </EuiProvider>
