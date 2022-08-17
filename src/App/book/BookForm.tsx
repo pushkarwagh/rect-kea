@@ -1,44 +1,43 @@
-import { EuiButton, EuiButtonEmpty, EuiFieldText, EuiForm, EuiFormRow, EuiModalFooter, useEuiBackgroundColor } from '@elastic/eui'
+import {
+  EuiButton,
+  EuiButtonEmpty,
+  EuiFieldText,
+  EuiForm,
+  EuiFormRow,
+  EuiModalFooter,
+} from '@elastic/eui'
 import { useActions } from 'kea'
 import { useEffect, useState } from 'react'
 import { bookLogic } from './bookLogic'
-
-type BookInfo = {
-  id: number
-  author: string
-  country: string
-  imageLink: string
-  language: string
-  link: string
-  pages: number
-  title: string
-  year: number
-}
+import { BookInfo } from './types'
 
 interface FromProps {
   modalFormId: string
   det?: BookInfo
   isEdit?: boolean
+  isShow?: boolean
   isAdd?: boolean
-  handleModal?: () => void
+  handleModal?: (() => unknown) | undefined
 }
 
 function BookForm(props: FromProps) {
+  const { handleModal } = props
   const { editBook, addBook } = useActions(bookLogic)
-  const { modalFormId, det, isEdit, isAdd } = props
-  const unique_id = localStorage.getItem("id");
+  const { modalFormId, det, isEdit, isAdd, isShow } = props
   const [state, setState] = useState({
     id: 0,
     title: '',
     author: '',
     country: '',
+    imageLink: '',
     language: '',
+    link: 'https://keajs.org/docs/',
     pages: 0,
     year: 0,
   })
 
   useEffect(() => {
-    console.log('----det', det)
+    // console.log('----det', det)
 
     if (det !== undefined) {
       setState({
@@ -47,7 +46,9 @@ function BookForm(props: FromProps) {
         title: det?.title,
         author: det?.author,
         country: det?.country,
+        imageLink: det?.imageLink,
         language: det?.language,
+        link: det?.link,
         pages: Number(det?.pages),
         year: Number(det?.year),
       })
@@ -60,66 +61,45 @@ function BookForm(props: FromProps) {
     setState({ ...state, [name]: value })
   }
 
-  const handleSubmit = (e:any) => {
-    e.preventDefault()
-    const {  title, author, country, language, pages, year } = state
+  const handleSubmit = (e: any) => {
+    e.preventDefault();
+    const { title, author, country, language, pages, year } = state
+
     if (isEdit) {
-      console.log("----modal form",isEdit);      
+      console.log('----modal form', isEdit, state)
       editBook(state)
-     return  props.handleModal
+      handleModal?.()
     }
+
     if (isAdd) {
-      const new_id = Number(unique_id) + 1
-      setState({...state, id: new_id})
-      console.log("------>",typeof new_id);
-      
+      const new_id = Math.floor(Math.random() * 100) + 11
+      // setState({...state, id: new_id})
+      console.log('------>', state, new_id)
+
       if (title !== '' || author !== '' || country !== '' || language !== '' || pages >= 0 || year >= 0) {
-         addBook(state)
-         return props.handleModal
+        addBook({ ...state, id: new_id })
+        handleModal?.()
       } else {
         alert('fields cannot be empty')
       }
     }
-    console.log('------submitting')
-    // props.handleModal
+    // console.log('------submitting')
   }
-
-  console.log('-----stae', state)
 
   return (
     <>
       <EuiForm id={modalFormId} component="form">
         <EuiFormRow label="Title">
-          <EuiFieldText
-            name="title"
-            value={state.title}
-            onChange={(e) => handleChange(e)}
-            disabled={isAdd ? false : isEdit ? false : true}
-          />
+          <EuiFieldText name="title" value={state.title} onChange={(e) => handleChange(e)} disabled={isShow} />
         </EuiFormRow>
         <EuiFormRow label="Author">
-          <EuiFieldText
-            name="author"
-            value={state.author}
-            onChange={(e) => handleChange(e)}
-            disabled={isAdd ? false : isEdit ? false : true}
-          />
+          <EuiFieldText name="author" value={state.author} onChange={(e) => handleChange(e)} disabled={isShow} />
         </EuiFormRow>
         <EuiFormRow label="Country">
-          <EuiFieldText
-            name="country"
-            value={state.country}
-            onChange={(e) => handleChange(e)}
-            disabled={isAdd ? false : isEdit ? false : true}
-          />
+          <EuiFieldText name="country" value={state.country} onChange={(e) => handleChange(e)} disabled={isShow} />
         </EuiFormRow>
         <EuiFormRow label="Language">
-          <EuiFieldText
-            name="language"
-            value={state.language}
-            onChange={(e) => handleChange(e)}
-            disabled={isAdd ? false : isEdit ? false : true}
-          />
+          <EuiFieldText name="language" value={state.language} onChange={(e) => handleChange(e)} disabled={isShow} />
         </EuiFormRow>
         <EuiFormRow label="Pages">
           <EuiFieldText
@@ -127,7 +107,7 @@ function BookForm(props: FromProps) {
             type="number"
             value={state.pages}
             onChange={(e) => handleChange(e)}
-            disabled={isAdd ? false : isEdit ? false : true}
+            disabled={isShow}
           />
         </EuiFormRow>
         <EuiFormRow label="Year">
@@ -136,22 +116,22 @@ function BookForm(props: FromProps) {
             type="number"
             value={state.year}
             onChange={(e) => handleChange(e)}
-            disabled={isAdd ? false : isEdit ? false : true}
+            disabled={isShow}
           />
         </EuiFormRow>
+
+        <EuiModalFooter style={{ marginTop: '10px' }}>
+          <EuiButtonEmpty  color="danger" onClick={props.handleModal}>Cancel</EuiButtonEmpty>
+
+          {!isShow ? (
+            <EuiButton  color="success" type="submit" form={modalFormId} onClick={(e) => handleSubmit(e)} fill>
+              Save
+            </EuiButton>
+          ) : (
+            ''
+          )}
+        </EuiModalFooter>
       </EuiForm>
-
-      <EuiModalFooter style={{ marginTop: '10px' }}>
-        <EuiButtonEmpty onClick={props.handleModal}>Cancel</EuiButtonEmpty>
-
-        {isEdit || isAdd ? (
-          <EuiButton type="submit" form={modalFormId} onClick={(e)=>handleSubmit(e)} fill>
-            Save
-          </EuiButton>
-        ) : (
-          ''
-        )}
-      </EuiModalFooter>
     </>
   )
 }

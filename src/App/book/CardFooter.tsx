@@ -3,52 +3,45 @@ import { useActions, useValues } from 'kea'
 import { useEffect, useState } from 'react'
 import { bookLogic } from './bookLogic'
 import BookModal from './BookModal'
-
-// type BookInfo = {
-//   id: number
-//   author: string
-//   country: string
-//   imageLink: string
-//   language: string
-//   link: string
-//   pages: number
-//   title: string
-//   year: number
-// }
+import { BookInfo } from "./types"
 
 interface footerProps {
-  ab: string
+  nav: string
   id: number
 }
 
 function CardFooterContent(props: footerProps) {
-    const [bookDetails, setBookDetails] = useState({})
-    const [isEdit, setIsEdit] = useState(false)
-    const [isModalVisible, setIsModalVisible] = useState(false)
+  const [bookDetails, setBookDetails] = useState<BookInfo>()
+  const [isEdit, setIsEdit] = useState(false)
+  const [isShow, setIsShow] = useState(false)
+  const [isModalVisible, setIsModalVisible] = useState(false)
 
-  const { editBook, deleteBook } = useActions(bookLogic)
+  const { deleteBook } = useActions(bookLogic)
   const { books } = useValues(bookLogic)
   const { id } = props
 
-  //   console.log('------->props', props)
-
   const handleEdit = () => {
     console.log('---. edit')
-    setIsEdit(!isEdit)
+    // setIsShow(false)
+    setIsEdit(true)
     setIsModalVisible(!isModalVisible)
+  }
 
-    // editBook(props.id, )
-  }
-  const handleModal = () => setIsModalVisible(!isModalVisible)
-  const handleShow = () => {
-      setIsEdit(false)
-    //   setBookDetails((sb) => (sb = books.find((b) => b.id == id)))
+  const handleModal = () => {
+    setIsEdit(false)
+    setIsShow(false)
     setIsModalVisible(!isModalVisible)
   }
+
+  const handleShow = () => {
+    // setIsEdit(false)
+    setIsShow(true)
+    setIsModalVisible(!isModalVisible)
+  }
+
   useEffect(() => {
-      setBookDetails((sb) => (sb = books.find((b) => b.id == id)))
-      console.log('-------useEffect', bookDetails)
-  }, [])
+    setBookDetails((sb) => (sb = books.find((b) => b.id == id)))
+  }, [handleShow])
 
   return (
     <>
@@ -73,18 +66,18 @@ function CardFooterContent(props: footerProps) {
             delete{' '}
           </EuiButton>
         </EuiFlexItem>
-        {/* </EuiFlexGroup>
 
-        <EuiFlexGroup justifyContent="flexEnd"> */}
         <EuiFlexItem grow={false}>
-          <EuiLink href={props.ab} target="_blank">
+          <EuiLink href={props.nav} target="_blank">
             <EuiButton> More details... </EuiButton>
           </EuiLink>
         </EuiFlexItem>
+
       </EuiFlexGroup>
       {isModalVisible ? (
         <BookModal
           isEdit={isEdit}
+          isShow={isShow}
           bookDetails={bookDetails}
           isModalVisible={isModalVisible}
           handleModal={handleModal}
