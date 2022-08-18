@@ -46,10 +46,10 @@ export const bookLogic = kea<bookLogicType>([
     console.log('--------unmounted')
     actions.addBook('')
   }),
-  // selectors({
-  //   findById: [
-  //     (selectors) => [selectors.books],
-  //     (books:any) => (id: number) => books.find((book:any) => book.id === id),
-  //   ],
-  // })
+  selectors({
+    findById: [
+      (selectors) => [selectors.books],
+      (books:any) => (id: number) => books.find((book:any) => book.id === id),
+    ],
+  })
 ])

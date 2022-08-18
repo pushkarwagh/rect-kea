@@ -1,5 +1,5 @@
 import { EuiButton, EuiFlexGroup, EuiFlexItem, EuiLink } from '@elastic/eui'
-import { useActions, useValues } from 'kea'
+import { selectors, useActions, useValues } from 'kea'
 import { useEffect, useState } from 'react'
 import { bookLogic } from './bookLogic'
 import BookModal from './BookModal'
@@ -17,7 +17,9 @@ function CardFooterContent(props: footerProps) {
   const [isModalVisible, setIsModalVisible] = useState(false)
 
   const { deleteBook } = useActions(bookLogic)
-  const { books } = useValues(bookLogic)
+  // const {findById} = useValues(booklogic)
+  // use findById instead of books,it returns a single book...
+  const { books } = useValues(bookLogic) 
   const { id } = props
 
   const handleEdit = () => {
@@ -41,8 +43,11 @@ function CardFooterContent(props: footerProps) {
 
   useEffect(() => {
     setBookDetails((sb) => (sb = books.find((b) => b.id == id)))
+    // or setBookDetils(findById(id))
   }, [handleShow])
 
+  // console.log("------> findbyID",findById(id)); to check values are of correct book. 
+  
   return (
     <>
       <EuiFlexGroup justifyContent="spaceEvenly" gutterSize="s" responsive={false} wrap>
