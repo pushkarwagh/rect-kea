@@ -1,6 +1,6 @@
 import { actions, kea, path, reducers, listeners, afterMount, beforeUnmount, selectors } from 'kea'
-import { BooksList } from '../../data2'
 
+import { BooksList } from '../../data2'
 import type { bookLogicType } from './bookLogicType'
 
 export const bookLogic = kea<bookLogicType>([

@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react'
 import BookCard from './BookCard'
 import { bookLogic } from './bookLogic'
 import BookModal from './BookModal'
-import { BookInfo } from './types'
 
 function Books() {
   const initialQuery = EuiSearchBar.Query.MATCH_ALL
@@ -51,7 +50,7 @@ function Books() {
         <EuiSearchBar
           defaultQuery={initialQuery}
           box={{
-            placeholder: 'e.g. Search By Tiltle or Author Name',
+            placeholder: 'e.g. Search By Book Title or Author Name',
           }}
           onChange={onChange}
         />
@@ -62,7 +61,7 @@ function Books() {
         </EuiButton>
       </EuiTableRow>
       <EuiSpacer />
-      <EuiFlexGroup gutterSize="l" style={{ display: 'table-caption', margin: 'auto', width: '50%' }}>
+      <EuiFlexGroup gutterSize="l" style={{ display: 'table-caption', margin: 'auto', width: '0%' }}>
         {searchBook.slice(0, 20).map((book, index) => {
           return <BookCard bookInfo={book} index={index} key={book.id} />
         })}
