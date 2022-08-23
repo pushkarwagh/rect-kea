@@ -44,7 +44,7 @@ function CardFooterContent(props: footerProps) {
   useEffect(() => {
     setBookDetails((sb) => (sb = books.find((b) => b.id == id)))
     // or setBookDetils(findById(id))
-  }, [handleShow])
+  }, [handleShow,handleEdit])
 
   // console.log("------> findbyID",findById(id)); to check values are of correct book. 
   

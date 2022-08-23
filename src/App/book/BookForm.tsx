@@ -75,8 +75,7 @@ function BookForm(props: FromProps) {
 
   const handleSubmit = async (e: any) => {
     e.preventDefault()
-    const { title, author, country, language, pages, year } = state
-
+    
     const isFormValid = await formSchema.isValid(state, {
       abortEarly: false,
     })
@@ -88,18 +87,12 @@ function BookForm(props: FromProps) {
         editBook(state)
         handleModal?.()
       }
-
       if (isAdd) {
         const new_id = Math.floor(Math.random() * 100) + 11
         // setState({...state, id: new_id})
         console.log('------>', state, new_id)
-
-        if (title !== '' || author !== '' || country !== '' || language !== '' || pages >= 0 || year >= 0) {
-          addBook({ ...state, id: new_id })
-          handleModal?.()
-        } else {
-          alert('fields cannot be empty')
-        }
+        addBook({ ...state, id: new_id })
+        handleModal?.()
       }
       console.log('---out of valid')
     } else {
