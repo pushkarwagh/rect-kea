@@ -16,28 +16,28 @@ export const bookLogic = kea<bookLogicType>([
       {
         addBook: (state, { book }) => state.concat(book),
         deleteBook: (state, { id }) => state.filter((bk) => bk.id !== id),
-        editBook: (state, { book }) => state.map((bk) => bk.id === book.id ? book : bk),
+        editBook: (state, { book }) => state.map((bk) => (bk.id === book.id ? book : bk)),
       },
     ],
   }),
-    listeners(({ actions }) => ({
-        addBook: async (_, breakpoint) => {
-        console.log('inside listener addbook?')
-        await breakpoint(100)
-        console.log('after breakpoint addbook listener!')
-      },
-      editBook: async (_, breakpoint) => {
-        console.log('inside listener editbook?')
-        await breakpoint(100)
-        console.log('after breakpoint editbook listener!')
-      },
-      deleteBook: async (_, breakpoint) => {
-        console.log('inside listener deletebook?')
-        await breakpoint(100)
-        console.log('after breakpoint deletebook listener!')
-      },
-    })),
-  afterMount(({ actions, cache }) => {
+  listeners(({ actions }) => ({
+    addBook: async (_, breakpoint) => {
+      console.log('inside listener addbook?')
+      await breakpoint(100)
+      console.log('after breakpoint addbook listener!')
+    },
+    editBook: async (_, breakpoint) => {
+      console.log('inside listener editbook?')
+      await breakpoint(100)
+      console.log('after breakpoint editbook listener!')
+    },
+    deleteBook: async (_, breakpoint) => {
+      console.log('inside listener deletebook?')
+      await breakpoint(100)
+      console.log('after breakpoint deletebook listener!')
+    },
+  })),
+  afterMount(async ({ actions, cache }) => {
     console.log('--------mounted')
     actions.addBook(BooksList)
     console.log(BooksList)
@@ -49,7 +49,7 @@ export const bookLogic = kea<bookLogicType>([
   selectors({
     findById: [
       (selectors) => [selectors.books],
-      (books:any) => (id: number) => books.find((book:any) => book.id === id),
+      (books: any) => (id: number) => books.find((book: any) => book.id === id),
     ],
-  })
+  }),
 ])

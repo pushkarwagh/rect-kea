@@ -1,0 +1,13 @@
+version: "3"
+services:
+  example-implementation:
+    image: node:12-alpine
+    # build: example-implementation
+    command: sh -c "npm start"
+    working_dir: /example-implementation
+    volumes:
+      - ./:/example-implementation
+    ports:
+      - "3000:3000"
+    expose:
+      - 3000
